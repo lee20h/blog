@@ -1,0 +1,4 @@
+theme = 'anatole'
+baseURL = 'http://example.org/'
+languageCode = 'ko-kr'
+title = 'My New Hugo Site'
