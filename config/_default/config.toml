@@ -48,15 +48,20 @@ localizedDates = false
   weight = 80
 
 [params.giscus]
-repo = "lee20h/blog"
-repoID = "R_kgDOKNxRtA"
-category = "General"
-categoryID = "DIC_kwDOKNxRtM4CZErD"
-data-mapping="pathname"
-data-strict="0"
-data-reactions-enabled="1"
-data-emit-metadata="0"
-data-input-position="bottom"
-data-theme="light_high_contrast"
-data-lang="ko"
-crossorigin="anonymous"
+  repo = "lee20h/blog"
+  repoID = "R_kgDOKNxRtA"
+  category = "General"
+  categoryID = "DIC_kwDOKNxRtM4CZErD"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light_high_contrast"
+  data-lang="ko"
+  crossorigin="anonymous"
+
+[sitemap]
+  changefreq = "daliy"
+  priority = 1.0
+  filename = "sitemap.xml"
