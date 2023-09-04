@@ -1,4 +1,4 @@
 theme = 'anatole'
-baseURL = 'http://example.org/'
+baseURL = 'https://lee20h.github.io/blog'
 languageCode = 'ko-kr'
-title = 'My New Hugo Site'
+title = '여정기'

@@ -1,8 +1,13 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
-Description: ""
-Tags: []
-Categories: []
-DisableComments: false
+description: ""
+tags:
+  - tag
+categories:
+  - category
+series:
+  - series
+thumbnail: "images/landscape.jpg"
+published: false
 ---

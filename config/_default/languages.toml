@@ -2,4 +2,4 @@
 title = "여정기"
 weight = 1
 LanguageName = "KO"
-contentDir = "content/korean"
+contentDir = "content"
