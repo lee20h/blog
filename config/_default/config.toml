@@ -62,6 +62,6 @@ localizedDates = false
   crossorigin="anonymous"
 
 [sitemap]
-  changefreq = "daliy"
+  changefreq = "daily"
   priority = 1.0
   filename = "sitemap.xml"
