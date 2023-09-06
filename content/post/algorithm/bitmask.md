@@ -114,3 +114,5 @@ int tsp(int cur, int visited) {
 }
 ```
 해당 문제에서 사용한 함수를 가져와봤다. 이런식으로 비트마스크를 사용했다.
+
+https://www.ardanlabs.com/blog/2021/04/using-bitmasks-in-go.html
