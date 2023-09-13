@@ -7,7 +7,7 @@ categories:
   - cd
 series:
   - cicd
-published: false
+published: true
 ---
 
 ## Argo 란?
@@ -108,6 +108,8 @@ Application 안에 정의된 manifest들을 기준으로 여러 리소스들을 
 
 ## CLI
 
+### Installation
+
 ```shell
 $ brew install argocd
 ```
@@ -115,6 +117,8 @@ $ brew install argocd
 brew를 이용하여 Argo CD cli를 설치할 수 있다. 다른 cli 툴들과는 다르게 서버와 같이 패키징되어 있지 않고 cli만 다운로드 받을 수 있다.  
 그 이유로는, Kubernetes와 함께 사용해야하므로 대부분의 서버 배포는 Kubernetes 내부에 서버가 배포되는 방식이다.  
 공식 문서에서 안내하는 [ArgoCD Manifest](https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml)를 그대로 배포하게 되면 UI와 서버를 배포할 수 있다.
+
+### Connection
 
 처음 연결할 때는 다음과 같은 명령어로 연결 할 수 있으며, 혹은 설정에서 admin의 비밀번호를 지정할 수 있다.
 
@@ -127,5 +131,16 @@ argocd admin initial-password
 ```shell
 argocd login <AROGCD_SERVER>
 ```
+
+### MultiCluster
+
+만약 MultiCluster를 운용하면서 하나의 ArgoCD로 중앙 관리를 한다면, 다음 명령어를 통해 연결하면 된다.
+
+```shell
+argocd cluster add <CLUSTER_NAME>
+```
+
+여기서 사용하는 cluster의 이름은 `~/.kube/config`에 들어있는 context를 기준으로 사용할 수 있다.
+
 
 Argo CD cli에 대해서는 다음 포스팅에서 더 자세하게 다뤄볼려고 한다.
