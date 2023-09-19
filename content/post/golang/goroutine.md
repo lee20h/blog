@@ -86,7 +86,10 @@ published: false
   
 ### GMP
 
-고루틴은 Go 런타임에 의해서 관리된다고 앞서 말했었다. Go 런타임에서 어떻게 다중화된 스레드들을 할당하고 관리하며, 동시성을 이룰 수 있었는지 스케줄러를 통해서 알아보자.  
+고루틴은 Go 런타임에 의해서 관리된다고 앞서 말했었다. Go 런타임에서 어떻게 다중화된 스레드들을 할당하고 관리하며, 동시성을 이룰 수 있었는지 스케줄러를 통해서 알아보자.
+
+![image](https://github.com/lee20h/blog/assets/59367782/36aca8ba-36a7-4b25-913e-a974a71aa557)
+
 - G (Goroutine) : 고루틴을 의미
   - 런타임이 고루틴을 관리하기 위해서 사용합니다.
   - 컨텍스트 스위칭을 위해 스택 포인터, 고루틴의 상태 등을 가지고 있습니다.
@@ -107,9 +110,7 @@ published: false
 
 Go 언어는 내부 로직들도 전부 Go 언어로 구현되어 있어서 찾아볼 수 있다. 여기서의 GMP 스케줄러는 [runtime/runtime2](https://github.com/golang/go/blob/master/src/runtime/runtime2.go)에서 구현체를 확인할 수 있다.
 
-!! 그림을 넣어야함 !!
-
-
+Queue와 Poll Order에 대해서 서술 필요
 
 ## ref
 
