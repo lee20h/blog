@@ -10,3 +10,7 @@ series:
   - Concurrency
 published: false
 ---
+
+## Go concurrency
+
+CSP
