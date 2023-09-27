@@ -9,7 +9,7 @@ categories:
   - golang
 series:
   - Concurrency
-published: false
+published: true
 ---
 
 # Goroutine 이란?
@@ -84,6 +84,27 @@ published: false
 - 경량 스레드이므로 고루틴의 생성 및 작업 전환에 사용되는 리소스 및 시간이 적어서 다량을 생성해도 부담이 적다.
 - 채널을 통해 데이터 전달을 고루틴 간의 데이터 수발신으로 수행하여 공유 변수로 데이터를 전달할 때 발생할 수 있는 경합 상태(race condition), 교착 상태(deadlock), 데이터 오염이나 불일치 등의 발생을 차단하고 데이터의 흐름을 코드 상에서 직관적으로 볼 수 있도록 한다.
   
+### Gorotine State
+
+쓰레드와 마찬가지로 고루틴은 동일한 세 가지 상위 레벨 상태(High-level States)를 갖으며, Go 스케줄러가 직접 관리한다.
+
+- Waiting
+- Runnable
+- Executing
+
+**Waiting**:
+- 실행을 계속하기 위한 특정 조건이나 리소스를 기다린다. 예를 들면, 채널에서 데이터를 수신하기를 기다리거나, 락(lock)을 획득하기를 기다리는 고루틴 상태다.
+- Waiting 상태는 고루틴이 실제로 CPU 시간을 소비하지 않으며, 대신 Go의 런타임 스케줄러에 의해 다른 고루틴에게 CPU 제어권이 넘어간다.
+
+**Runnable**:
+- 실행을 위해 준비되었지만 아직 CPU에서 실행되지 않은 상태
+- 고루틴 스케줄러의 대기열(queue)에 위치하며, CPU가 사용 가능해지면 다음에 실행될 준비된 고루틴 
+- 스케줄러는 Runnable 상태의 고루틴 중 하나를 선택하여 Executing 상태로 변경하고 실행
+
+**Executing**:
+- 고루틴이 현재 CPU에서 코드를 실행하고 있는 상태
+- 고루틴은 이 상태에서 실제 작업을 수행하며, 작업이 완료되면 종료되거나 다른 상태 (예: Waiting)로 전환이 가능
+
 ### GMP
 
 고루틴은 Go 런타임에 의해서 관리된다고 앞서 말했었다. Go 런타임에서 어떻게 다중화된 스레드들을 할당하고 관리하며, 동시성을 이룰 수 있었는지 스케줄러를 통해서 알아보자.
@@ -145,10 +166,38 @@ Go 언어는 내부 로직들도 전부 Go 언어로 구현되어 있어서 찾�
 
 ### Work Steal
 
-https://cppis.github.io/golang%20common/whats.golang.scheduler.go.scheduler/#%EC%9E%91%EC%97%85-%EC%8A%A4%ED%8B%B8%EB%A7%81work-stealing
-https://ssup2.github.io/theory_analysis/Golang_Goroutine_Scheduling/
+```shell
+runtime.schedule() {
+    // only 1/61 of the time, check the global runnable queue for a G.
+    // if not found, check the local queue.
+    // if not found,
+    //     try to steal from other Ps.
+    //     if not, check the global runnable queue.
+    //     if not found, poll network.
+}
+```
+<center>Goroutine Scheduling Algorithm</center>
 
+1. LRQ(Local Queue)에 있는 G(고루틴)를 먼저 실행합니다. 이 때 LRQ는 LIFO 방식으로 실행하므로, 가장 최근에 스케줄된 G가 먼저 실행된다.
+2. LRQ가 빈 경우 다른 P(Processor)의 LRQ에서 절반의 G를 훔쳐오게 됩니댜. 이 때는 FIFO 방식으로 실행하게 되므로, 다른 P는 오래된 G를 실행하고 최근 스케줄된 G는 P가 직접 실행하도록 한다.
+3. 다른 LRQ도 다 비어있는 경우엔 GRQ(Global Run Queue)에서 G를 훔쳐옵니다. 
+4. GRQ가 비어있는 경우엔 Net Poller에서 G를 훔쳐옵니다.
+5. 만약, 다 비어있다면, P는 idle 상태로 전환된다.
 
+**특징**:
+- Locality를 위해 새로 생성된 G는 3ms 동안 Stealing이 되지 않는다.
+- Go 스케줄러가 G를 61번 스케줄링 할 때 마다 LRQ가 아닌 GRQ에서 가져온다.
+
+### Fairness
+
+1. Preemption (선점): 고루틴이 너무 오래 실행될 경우(10ms), 다른 고루틴에 실행 기회를 주기 위해 현재 실행 중인 고루틴을 중단하고 GRQ로 이동시킨다. 최근의 Go 버전들에서는 비쥬얼 트레이싱을 이용한 고루틴의 선점이 도입되었습니다.
+   - 만약 2개의 고루틴이 LRQ에 번갈아가면서 저장 및 실행 된다면, LIFO를 이용하기 때문에 FIFO 부분의 고루틴들이 실행이 안될 수 있다. 따라서 LIFO 부분에서 10ms Timeout이 초기화되지 않고 상속이 된다.
+2. Work Stealing: 고루틴 스케줄러는 여러 프로세서 (P) 간의 부하 균형을 위해 work stealing 전략을 적용
+3. Global Run Queue: 각 프로세서는 고루틴을 실행하기 위해 로컬 큐를 확인하기 전에 글로벌 큐를 일정 비율로 확인하여, 글로벌 큐의 고루틴들에게도 실행 기회를 제공
+4. Network Poller Integration: I/O 바운드 고루틴들, 특히 네트워크 I/O에 의존하는 고루틴들은 Net Poller로 스케줄링 될 수 있다. CPU-bound 작업 중인 다른 고루틴들에게 실행 기회를 주기 위한 것이다.
+5. Feedback-driven Scheduling: Go 스케줄러는 시스템의 전반적인 상태와 피드백을 고려하여 스케줄링 결정을 내릴 수 있다.
+6. Time Slicing and Quantum: Go 스케줄러는 고루틴에 할당된 시간 슬라이스나 Quantum을 기반으로 고루틴의 실행을 제한하고, 다른 고루틴에 실행 기회를 제공한다.
+7. Priority-based Scheduling: 실제로 Go 스케줄러는 모든 고루틴을 동등하게 취급한다.
 
 ## ref
 
