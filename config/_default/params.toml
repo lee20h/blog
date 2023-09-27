@@ -60,7 +60,7 @@ use = "katex"  # options: "katex", "mathjax". default is "katex".
 [[socialIcons]]
 icon = "fab fa-github"
 title = "GitHub"
-url = "https://github.com/lee20h/blog/"
+url = "https://github.com/lee20h/"
 
 [[socialIcons]]
 icon = "fas fa-envelope"

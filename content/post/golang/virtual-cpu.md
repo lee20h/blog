@@ -1,6 +1,6 @@
 ---
 title: "Virtual Cpu"
-date: 2023-09-23T01:02:24+09:00
+date: 2023-09-28T01:02:24+09:00
 tags:
   - tag
 categories:

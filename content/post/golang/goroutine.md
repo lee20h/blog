@@ -178,10 +178,10 @@ runtime.schedule() {
 ```
 <center>Goroutine Scheduling Algorithm</center>
 
-1. LRQ(Local Queue)에 있는 G(고루틴)를 먼저 실행합니다. 이 때 LRQ는 LIFO 방식으로 실행하므로, 가장 최근에 스케줄된 G가 먼저 실행된다.
-2. LRQ가 빈 경우 다른 P(Processor)의 LRQ에서 절반의 G를 훔쳐오게 됩니댜. 이 때는 FIFO 방식으로 실행하게 되므로, 다른 P는 오래된 G를 실행하고 최근 스케줄된 G는 P가 직접 실행하도록 한다.
-3. 다른 LRQ도 다 비어있는 경우엔 GRQ(Global Run Queue)에서 G를 훔쳐옵니다. 
-4. GRQ가 비어있는 경우엔 Net Poller에서 G를 훔쳐옵니다.
+1. LRQ(Local Queue)에 있는 G(고루틴)를 먼저 실행한다. 이 때 LRQ는 LIFO 방식으로 실행하므로, 가장 최근에 스케줄된 G가 먼저 실행된다.
+2. LRQ가 빈 경우 다른 P(Processor)의 LRQ에서 절반의 G를 훔쳐오게 된댜. 이 때는 FIFO 방식으로 실행하게 되므로, 다른 P는 오래된 G를 실행하고 최근 스케줄된 G는 P가 직접 실행하도록 한다.
+3. 다른 LRQ도 다 비어있는 경우엔 GRQ(Global Run Queue)에서 G를 훔쳐온다. 
+4. GRQ가 비어있는 경우엔 Net Poller에서 G를 훔쳐온다.
 5. 만약, 다 비어있다면, P는 idle 상태로 전환된다.
 
 **특징**:
@@ -190,7 +190,7 @@ runtime.schedule() {
 
 ### Fairness
 
-1. Preemption (선점): 고루틴이 너무 오래 실행될 경우(10ms), 다른 고루틴에 실행 기회를 주기 위해 현재 실행 중인 고루틴을 중단하고 GRQ로 이동시킨다. 최근의 Go 버전들에서는 비쥬얼 트레이싱을 이용한 고루틴의 선점이 도입되었습니다.
+1. Preemption (선점): 고루틴이 너무 오래 실행될 경우(10ms), 다른 고루틴에 실행 기회를 주기 위해 현재 실행 중인 고루틴을 중단하고 GRQ로 이동시킨다. 최근의 Go 버전들에서는 비쥬얼 트레이싱을 이용한 고루틴의 선점이 도입되었다.
    - 만약 2개의 고루틴이 LRQ에 번갈아가면서 저장 및 실행 된다면, LIFO를 이용하기 때문에 FIFO 부분의 고루틴들이 실행이 안될 수 있다. 따라서 LIFO 부분에서 10ms Timeout이 초기화되지 않고 상속이 된다.
 2. Work Stealing: 고루틴 스케줄러는 여러 프로세서 (P) 간의 부하 균형을 위해 work stealing 전략을 적용
 3. Global Run Queue: 각 프로세서는 고루틴을 실행하기 위해 로컬 큐를 확인하기 전에 글로벌 큐를 일정 비율로 확인하여, 글로벌 큐의 고루틴들에게도 실행 기회를 제공
