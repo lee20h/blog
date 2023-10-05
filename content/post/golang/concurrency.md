@@ -13,6 +13,11 @@ published: true
 
 ## Go Concurrency
 
+Go에서는 동시성을 해결하기 위해 다음과 같이 두 가지 스타일을 지원한다.
+
+- CSP use communication as synchronization primitive
+- Shared memory multithreading uses locks
+
 ### CSP란 ?
 
 Communicating Sequential Processes (CSP)는 병렬 프로그래밍의 복잡한 문제를 해결하기 위해 고안된 개념이다.  
@@ -23,14 +28,20 @@ Communicating Sequential Processes (CSP)는 병렬 프로그래밍의 복잡한 
 동시성 프로그래밍을 이야기하면, 대부분 병렬로 실행되는 멀티 스레드를 생각하게 된다. 이 때, 다양한 스레드 간에 데이터 구조, 변수, 메모리를 공유하는 부분을 무조건 생각해야 한다.  
 그 이유는 race condition, memory management, dead lock, random-weird-unexplained-exceptions 등을 해결하기 위함이다.
 
-### Golang
+메모리를 공유하기 위해 변수를 잠그는 방식이 아닌, 변수에서 저장된 값을 스레드에서 스레드로 통신 혹은 전송한다. 이 과정에서 전송하거나 전송 받는 스레드 둘 다 데이터가 도착할 때 까지 대기하게 된다.
+이러한 방식을 통해서 데이터가 교환될 때 스레드 간의 동기화를 강제하게 된다. 즉, 기본적으로 데이터 전송이 완료되기 전에 어느 스레드도 작업을 수행하지 않으므로 race condition과 같은 문제가 발생할 여지가 적다.
 
-Go에서는 어떻게 할까? 라는 질문에는 다음과 같이 답할 수 있다.  
-메모리를 공유하기 위해 변수를 잠그는 방식이 아닌, 변수에서 저장된 값을 스레드에서 스레드로 통신 혹은 전송한다. 이 과정에서 전송하거나 전송 받는 스레드 둘 다 데이터가 도착할 때 까지 대기하게 된다.  
-이러한 방식을 통해서 데이터가 교환될 때 스레드 간의 동기화를 강제하게 된다. 즉, 기본적으로 데이터 전송이 완료되기 전에 어느 스레드도 작업을 수행하지 않으므로 race condition과 같은 문제가 발생할 여지가 적습니다.
+프레임워크나 라이브러리를 통하지 않고 Go의 기본 기능으로 buffered channel이라는 기능을 제공한다. 따라서 channel을 통해서 스레드가 데이터를 주고 받을 때는 스레드가 lock되거나 동기화되는 것이 아닌 채널에 값이 채워지면 lock, 동기화되도록 한다.
 
-프레임워크나 라이브러리를 통하지 않고 Go의 기본 기능으로 buffered channel이라는 기능을 제공한다. 따라서 channel을 통해서 스레드가 데이터를 주고 받을 때는 스레드가 lock되거나 동기화되는 것이 아닌 채널에 값이 채워지면 lock, 동기화되도록 한다.  
-하지만 Go에서도 [Sync package](https://pkg.go.dev/sync)를 통해서 메모리 공유 모델도 사용할 수 있다. `sync.Mutex`의 `Lock()`, `Unlock()` method를 이용하여 고루틴 사이에 메모리를 공유할 수 있다.
+### Shared memory
+
+Sync package를 통해서 메모리 공유 모델도 사용할 수 있다. sync.Mutex의 Lock(), Unlock() method를 이용하여 고루틴 사이에 메모리를 공유할 수 있다.
+
+- sync.Mutex: mutual exclusion with lock / unlock
+- sync.RWMutex: multiple read, single write
+- sync.Once: initialize variables once 
+
+### 예제
 
 - [Sync 예제](https://go.dev/tour/concurrency/9)
 
@@ -123,3 +134,4 @@ func main() {
 
 - https://www.minaandrawos.com/2015/12/06/concurrency-in-golang/
 - https://go.dev/blog/codelab-share
+- https://www.cs.princeton.edu/courses/archive/fall16/cos418/docs/P1-concurrency.pdf
