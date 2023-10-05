@@ -1,29 +1,42 @@
----
-layout: none
----
-<?xml version="1.0" encoding="UTF-8"?>
+{{- $pctx := . -}}
+        {{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
+        {{- $pages := slice -}}
+        {{- if or $.IsHome $.IsSection -}}
+        {{- $pages = $pctx.RegularPages -}}
+        {{- else -}}
+        {{- $pages = $pctx.Pages -}}
+        {{- end -}}
+        {{- $limit := .Site.Config.Services.RSS.Limit -}}
+        {{- if ge $limit 1 -}}
+        {{- $pages = $pages | first $limit -}}
+        {{- end -}}
+        {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>{{ site.name | xml_escape }}</title>
-        <description>{{ site.description | xml_escape }}</description>
-        <link>{{ site.url }}</link>
-        <atom:link href="{{ site.url }}/feed.xml" rel="self" type="application/rss+xml" />
-        <lastBuildDate>{% for post in site.posts limit:1 %}{{ post.date | date_to_rfc822 }}{% endfor %}</lastBuildDate>
-        {% for post in site.posts limit:10 %}
+        <title>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{.}} on {{ end }}{{ .Site.Title }}{{ end }}</title>
+        <link>{{ .Permalink }}</link>
+        <description>Recent content {{ if ne  .Title  .Site.Title }}{{ with .Title }}in {{.}} {{ end }}{{ end }}on {{ .Site.Title }}</description>
+        <generator>Hugo -- gohugo.io</generator>{{ with .Site.LanguageCode }}
+        <language>{{.}}</language>{{end}}{{ with .Site.Author.email }}
+        <managingEditor>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</managingEditor>{{end}}{{ with .Site.Author.email }}
+        <webMaster>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</webMaster>{{end}}{{ with .Site.Copyright }}
+        <copyright>{{.}}</copyright>{{end}}{{ if not .Date.IsZero }}
+        <lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+        {{- with .OutputFormats.Get "RSS" -}}
+        {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+        {{- end -}}
+        {{ range $pages }}
         <item>
-            <title>{{ post.title | xml_escape }}</title>
-            {% if post.author.name %}
-            <dc:creator>{{ post.author.name | xml_escape }}</dc:creator>
-            {% endif %}
-            {% if post.excerpt %}
-            <description>{{ post.excerpt | xml_escape }}</description>
-            {% else %}
-            <description>{{ post.content | xml_escape }}</description>
-            {% endif %}
-            <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
-            <link>{{ site.url }}{{ post.url }}</link>
-            <guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
+            <title>{{ .Title }}</title>
+            <link>{{ .Permalink }}</link>
+            <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+            {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
+            <guid>{{ .Permalink }}</guid>
+            <description>{{ .Summary | html }}</description>
+            {{ range .Params.tags }}
+            <category>{{ . }}</category>
+            {{ end }}
         </item>
-        {% endfor %}
+        {{ end }}
     </channel>
 </rss>
