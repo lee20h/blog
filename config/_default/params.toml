@@ -1,8 +1,8 @@
 
 title = "DevOps Journey"
 author = "Hun"
-#copyright = "2023"
 description = "공부 여정기"
+#copyright = "2023"
 profilePicture = "images/profile.jpg"
 keywords = "devops"
 favicon = "favicons/"
