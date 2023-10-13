@@ -1,6 +1,6 @@
 ---
 title: "가상화 관련 용어에 대해 알아보자"
-date: 2023-10-03T00:00:00+09:00
+date: 2023-10-14T00:00:00+09:00
 tags:
   - cloud
   - virtualization
@@ -8,7 +8,7 @@ categories:
   - virtualization
 series:
   - virtualization
-published: false
+published: true
 ---
 
 ## On-premise / Off-premise
@@ -91,6 +91,9 @@ vCPU 1개가 의미하는 바는 물리적 CPU Core 1개 동일하지 않으며,
   </figcaption>
 </figure>
 
+하이퍼바이저는 Root mode, 논리화된 도메인들은 Non-root mode로 동작된다. 여기서 도메인들은 **privileged command**를 실행하면 **Trap**이 발생하고 Trap Handler가 vm exit 명령을 통해 하이퍼바이저가 실행할 수 있게 한다.  
+실행이 완료되면 vm enter 명령을 통해 다시 도메인이 실행되도록 하여 하드웨어에 대한 명령을 내릴 수 있는 방식이다. 따라서 하이퍼바이저와 커널의 처리 방식에서 오버헤드가 발생하여 성능 저하가 일어난다.
+
 #### Binary Translation
 
 <figure>
@@ -99,6 +102,36 @@ vCPU 1개가 의미하는 바는 물리적 CPU Core 1개 동일하지 않으며,
     Binary Translation (<a href="https://suyeon96.tistory.com/53#Full%--Virtualization%---%EC%A-%--%EA%B-%--%EC%--%--%ED%--%---">출처</a>)
   </figcaption>
 </figure>
+
+논리화된 도메인에서 Guest OS는 다양한 OS를 사용할 수 있다. 이로 인해서, 가상화된 하드웨어에 요청 인터페이스도 OS마다 다르게 되는데 하나의 형식으로 변환해주는 작업을 **Binary Translation**라고 한다. 
+
+
+### Software Assisted – Full Virtualization  (BT – Binary Translation )
+
+<figure>
+  <img src="https://github.com/lee20h/blog/assets/59367782/5e5850b7-acb8-49d1-8823-117ef178e48f"/>
+  <figcaption>
+    Binary Translation (<a href="https://www.unixarena.com/2017/12/para-virtualization-full-virtualization-hardware-assisted-virtualization.html">출처</a>)
+  </figcaption>
+</figure>
+
+소프트웨어 지원 전가상화를 한 경우를 살펴보자. Binary Translation을 이용하여 명령어를 trap과 가상화하여 실행하게 된다. 위의 그림과 동일하게 하드웨어를 emulate하여 명령을 내릴 수 있게 된다. 따라서 오버헤드에 의한 성능 문제가 발생한다.
+
+- VMware 워크스테이션 (32bit guest OS)
+- Virtual PC
+- VirtualBox (32bit guest OS)
+- VMware 서버
+
+### Hardware-Assisted –  Full Virtualization  (VT)
+
+<figure>
+  <img src="https://github.com/lee20h/blog/assets/59367782/b7838ee0-79bd-47da-877d-4e0ba8e38db4"/>
+  <figcaption>
+    Hardware-assisted virtualization (<a href="https://www.unixarena.com/2017/12/para-virtualization-full-virtualization-hardware-assisted-virtualization.html">출처</a>)
+  </figcaption>
+</figure>
+
+하드웨어 지원 가상화는 Binary Translation을 제거하고 가상화하여 직접 하드웨어와 통신할 수 있게 한다. 그를 이용해, 유저 애플리케이션와 Guest OS에서 trap과 emulate를 이용하여 **privileged command**를 실행 할 수 있게 된다.
 
 ## 반가상화 (Para Virtualization)
 
@@ -123,6 +156,7 @@ Guest OS에서 하이퍼바이저에게 직접 요청을 날리는 부분을 **H
 - [Rain.i](http://cloudrain21.com/terms-about-virtualization)
 - [techDifferences](https://techdifferences.com/difference-between-full-virtualization-and-paravirtualization.html)
 - [Suyeon's Blog](https://suyeon96.tistory.com/53)
+- [UnixArena](https://www.unixarena.com/2017/12/para-virtualization-full-virtualization-hardware-assisted-virtualization.html)
 
 [^hyper-threading]: Intel이 개발한 기술로, 한 개의 물리적 CPU 코어를 두 개의 논리적 CPU 코어로 분할하여 동시에 두 개의 쓰레드를 처리할 수 있도록 한다. 이 기술은 즉, 물리적인 CPU 코어가 동시에 두 개의 작업을 처리하는 것처럼 운영 체제와 응용 프로그램에 보이게 한다.
 [^over-commit]: 하이퍼바이저가 물리적 CPU Core 보다 더 많은 vCPU를 할당하는 경우. 여러 가상 머신이나, 컨테이너가 CPU 리소스를 동시에 100% 사용하지 않는다는 가정하에, 리소스를 효과적으로 활용하는데 도움을 줌
