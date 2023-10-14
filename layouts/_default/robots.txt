@@ -1,3 +1,9 @@
 User-agent: *
-Allow: /
-Sitemap: https://20h.dev/sitemap.xml
+
+Disallow: /tags/
+Disallow: /archives/
+Disallow: /series/
+Disallow: /categories/
+Disallow: 404.html
+
+Sitemap: {{ "sitemap.xml" | absLangURL }}
