@@ -4,8 +4,11 @@ date: 2022-02-06
 tags:
   - docker
   - container
+  - virtualization
 categories:
-  - container
+  - virtualization
+series:
+  - virtualization
 published: true
 ---
 
