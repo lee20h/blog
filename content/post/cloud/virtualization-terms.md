@@ -5,9 +5,9 @@ tags:
   - cloud
   - virtualization
 categories:
-  - virtualization
+  - cloud
 series:
-  - virtualization
+  - cloud
 published: true
 ---
 
