@@ -35,9 +35,19 @@ published: false
 2. 오퍼레이터는 커스텀 리소스 변경되거나 요청이 발생하면, 분석 후 내부 컨트롤러 로직을 실행
 3. 컨트롤러 로직에서 애플리케이션의 상태를 조정하여 원하는 상태로 만들기 위해 쿠버네티스 API 서버에 요청
 
-## Controller Pattern
+## Controller
 
-https://kubernetes.io/ko/docs/concepts/architecture/controller/
+![image](https://github.com/lee20h/blog/assets/59367782/cc8aac0b-d80d-42db-9c4c-ffe706e0b24e)
+
+- API 서버를 통한 제어
+  - Job Controller
+- 직접 제어
+  - 클러스터 외부의 것들을 컨트롤 할 경우
+  - [autoscaler](https://github.com/kubernetes/autoscaler/)
+
+### Design
+
+의도한 상태와 현재 상태 즉, Desired state와 Current state를 비교하여 Desired state로 일정하게 유지시키기 위한 작업들을 하도록 설계되어잇다.
 
 ## ref
 
