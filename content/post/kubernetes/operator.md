@@ -7,7 +7,7 @@ tags:
   - pattern
 categories:
   - kubernetes
-published: false
+published: true
 ---
 
 # Operator(오퍼레이터) 패턴에 대하여
@@ -47,7 +47,48 @@ published: false
 
 ### Design
 
-의도한 상태와 현재 상태 즉, Desired state와 Current state를 비교하여 Desired state로 일정하게 유지시키기 위한 작업들을 하도록 설계되어잇다.
+의도한 상태와 현재 상태 즉, Desired state와 Current state를 비교하여 Desired state로 일정하게 유지시키기 위한 작업들을 하도록 설계 되어있다.
+
+## Operator SDK
+
+> The Operator SDK makes it easier to build Kubernetes native applications, a process that can require deep, application-specific operational knowledge.
+
+쿠버네티스 오퍼레이터를 쉽게 만들고 적용시키기 위해서 [Operator SDK](https://sdk.operatorframework.io/)라는 프레임워크가 존재한다.
+
+- Ansible
+- Go
+- Helm
+
+3가지의 방법을 통해서 오퍼레이터를 구현할 수 있게 제공한다.
+
+### install
+
+[install page](https://sdk.operatorframework.io/docs/installation/#install-from-homebrew-macos)
+
+Homebrew, Github, master 브랜치에서 install 총 3가지의 방법으로 설치할 수 있다.
+
+```shell
+$ brew install operator-sdk
+```
+
+macOS에서는 위와 같이 Homebrew로 바로 설치하여 사용할 수 있다.
+
+여기서는 Golang을 이용하여 기본적인 프레임워크 사용법에 대해서 알아볼려고 한다.
+
+### Go
+
+원하는 디렉토리에서 다음과 같이 실행하면 바로 Go를 이용해서 오퍼레이터를 생성하기 위한 준비가 끝난다.
+
+```shell
+$ operator-sdk init --domain example.com --repo github.com/example/operator
+$ operator-sdk create api --group cache --version v1alpha1 --kind CustomOperator --resource --controller
+```
+
+원하는 값을 넣어주면 Go module과 Kubernetes CRD, 필요한 RBAC, Custom Resource를 관리해주는 Manager 애플리케이션까지 한 레포지토리에서 관리할 수 있도록 제공해준다.  
+
+또한, Makefile에 많은 기능들이 정의되어 있어서 읽어보면 개발 및 배포를 편하게 진행할 수 있는 유틸성도 존재한다.
+
+main.go를 통해서 실행하면 `sigs.k8s.io/controller-runtime` 라이브러리를 통해서 애플리케이션이 로컬에서 바라보고 있는 디폴트 쿠버네티스 클러스터와 연결해서 테스트 혹은 디버깅 또한 쉽게 할 수 있다.
 
 ## ref
 
