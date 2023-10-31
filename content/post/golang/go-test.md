@@ -60,3 +60,89 @@ $ go test -run TestFunctionName
 - 외부 의존성 관리
 
 Goland와 VScode와 같은 IDE에서 확장 기능을 설치하면 원하는 Test 코드들을 작성하도록 템플릿을 제공하거나 테스트를 실행할 수 있다.
+
+### 예제
+
+- 기본 예제
+
+**main.go**
+```go
+package main
+
+import "fmt"
+
+func Add(a, b int) int {
+    return a + b
+}
+
+func main() {
+    fmt.Println(Add(2, 3))
+}
+```
+**main_test.go**
+```go
+package main
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+  result := Add(2, 3)
+  if result != 5 {
+    t.Errorf("Expected 5, but got %d", result)
+  }
+}
+```
+- 테이블 기반 테스트 예제
+
+**main.go**
+```go
+package main
+
+import "fmt"
+
+func Add(a, b int) int {
+    return a + b
+}
+
+func main() {
+    fmt.Println(Add(2, 3))
+}
+```
+**main_test.go**
+```go
+package main
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+    // 테스트 케이스를 정의하는 테이블
+    tests := []struct {
+        name string // 테스트 케이스의 이름
+        a, b int    // 입력값
+        want int    // 기대하는 결과값
+    }{
+        {"Add 1+2", 1, 2, 3},
+        {"Add 0+0", 0, 0, 0},
+        {"Add -1+2", -1, 2, 1},
+        {"Add 2+-2", 2, -2, 0},
+    }
+
+    // 테이블 기반 테스트를 실행
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            if got := Add(tt.a, tt.b); got != tt.want {
+                t.Errorf("Add(%d, %d) = %d, want %d", tt.a, tt.b, got, tt.want)
+            }
+        })
+    }
+}
+```
+
+```shell
+$ go test
+```
+
+명령을 통해서 바로 해당 결과를 얻어볼 수 있다. 
+
+![image](https://github.com/lee20h/blog/assets/59367782/8e5e18e0-d465-49ea-8bcd-d71fb6976418)
+
