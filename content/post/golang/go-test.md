@@ -4,6 +4,9 @@ date: 2023-10-30T22:55:12+09:00
 tags:
   - golang
   - test
+  - testify
+  - mock
+  - suite
 categories:
   - golang
 published: false
@@ -146,3 +149,174 @@ $ go test
 
 ![image](https://github.com/lee20h/blog/assets/59367782/8e5e18e0-d465-49ea-8bcd-d71fb6976418)
 
+## testify
+
+Go에서 자주 사용하는 테스팅 프레임워크로 `testify`가 있다. Go 기본 테스팅 패키지를 확장하여 다양한 기능을 제공하고 있다.
+
+### 특징
+
+- Assertion: assertion 함수를 제공하여 테스트 코드를 간결하고 명확하게 작성
+- Mocking: `testify/mock` 패키지로 인터페이스이 mock 구현을 쉽게 생성 관리
+- Suites: `testify/suite` 패캐지로 테스트 스위트 구성하여 관련된 테스트 케이스들을 그룹화
+- 읽기 쉬운 에러 메시지
+
+
+단점으로는 다음과 같은 부분들을 꼽는다.
+
+- 러닝 커브: 기본 테스팅 패키지에 익숙하다면, `testify`의 추가 기능들을 익히는데 시간이 필요할 수 있다.
+- 의존성: 당연한 말이지만, 외부 라이브러리르 써야해서 의존성이 증가한다.
+- 순수성: Go 테스팅 철학은 간결하고 최소한의 기능만을 제공하는 반면에, `testify`는 다양한 기능을 제공한다.
+
+### 예제
+
+### assert
+
+```shell
+$ go get github.com/stretchr/testify/assert
+```
+
+#### main.go
+
+```go
+package main
+
+import "fmt"
+
+func Add(a, b int) int {
+    return a + b
+}
+
+func main() {
+    fmt.Println(Add(2, 3))
+}
+```
+
+#### main_test.go
+
+```go
+package main
+
+import (
+    "testing"
+    "github.com/stretchr/testify/assert"
+)
+
+func TestAdd(t *testing.T) {
+    assert := assert.New(t)
+
+    // 테스트 케이스
+    assert.Equal(3, Add(1, 2), "Add(1, 2) should be 3")
+    assert.Equal(0, Add(0, 0), "Add(0, 0) should be 0")
+    assert.Equal(1, Add(-1, 2), "Add(-1, 2) should be 1")
+    assert.Equal(0, Add(2, -2), "Add(2, -2) should be 0")
+}
+```
+
+### mock
+
+```shell
+$ go get github.com/stretchr/testify/mock
+```
+
+#### main.go
+
+```go
+package main
+
+import "fmt"
+
+type Messenger interface {
+    SendMessage(to, message string) error
+}
+
+func Notify(messenger Messenger, to, message string) error {
+    return messenger.SendMessage(to, message)
+}
+
+func main() {
+    // 실제 구현
+    fmt.Println("Notify function")
+}
+```
+
+#### main_test.go
+
+```go
+package main
+
+import (
+    "testing"
+    "github.com/stretchr/testify/mock"
+)
+
+type MockMessenger struct {
+    mock.Mock
+}
+
+func (m *MockMessenger) SendMessage(to, message string) error {
+    args := m.Called(to, message)
+    return args.Error(0)
+}
+
+func TestNotify(t *testing.T) {
+    mockMessenger := new(MockMessenger)
+
+    mockMessenger.On("SendMessage", "receiver", "Hello!").Return(nil)
+
+    err := Notify(mockMessenger, "receiver", "Hello!")
+
+    mockMessenger.AssertExpectations(t)
+    mockMessenger.AssertNoUnexpectedCalls()
+    assert.Nil(t, err)
+}
+```
+
+### suite
+
+```shell
+$ go get github.com/stretchr/testify/suite
+```
+
+#### main.go
+
+```go
+// main.go
+package main
+
+func Add(a, b int) int {
+    return a + b
+}
+
+func Subtract(a, b int) int {
+    return a - b
+}
+```
+
+#### main_test.go
+
+```go
+package main
+
+import (
+    "testing"
+    "github.com/stretchr/testify/suite"
+)
+
+type CalculatorSuite struct {
+    suite.Suite
+}
+
+func (suite *CalculatorSuite) TestAdd() {
+    suite.Equal(3, Add(1, 2))
+    suite.Equal(0, Add(-1, 1))
+}
+
+func (suite *CalculatorSuite) TestSubtract() {
+    suite.Equal(1, Subtract(3, 2))
+    suite.Equal(-2, Subtract(1, 3))
+}
+
+func TestCalculatorSuite(t *testing.T) {
+    suite.Run(t, new(CalculatorSuite))
+}
+```
