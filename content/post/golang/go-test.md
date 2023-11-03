@@ -9,7 +9,7 @@ tags:
   - suite
 categories:
   - golang
-published: false
+published: true
 ---
 
 # Golang Test
