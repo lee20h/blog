@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes에 대하여"
+title: "Kubernetes Concept에 대하여"
 date: 2023-11-03T21:09:36+09:00
 tags:
   - kubernetes
@@ -35,6 +35,9 @@ Container Orchestration이 왜 필요한지에 대해서 짧게 정리하자면 
 # Concept
 
 [공식 문서](https://kubernetes.io/docs/concepts/)의 내용을 정리해서 작성하였다.
+
+- Cluster Architecture
+- Containers
 
 ## Cluster Architecture
 
@@ -192,3 +195,127 @@ API 서버가 리소스 요청을 동일한 클러스터 내의 다른 버전의
 - 유효한 내부 StorageVersion 객체가 있고 API 서버가 해당 리소스를 제공하지 않는 경우, 처리 중인 API 서버는 해당 리소스를 처리할 수 있는 동료 API 서버를 찾아 요청을 프록시한다.
 
 만약 동료 API 서버가 응답하지 않는 경우 (네트워크 연결 문제 등), 처리 중인 API 서버는 503 (`Service Unavailable`) 오류로 응답하는 경우가 있기 때문에 주의해야한다.
+
+---
+
+## Containers
+
+쿠버네티스에서 컨테이너는 애플리케이션과 그 실행에 필요한 모든 종속성을 패키징하는 기술이다. 컨테이너는 어디서든 동일한 동작을 보장하는 반복 가능한 단위로, 애플리케이션을 호스트 인프라에서 분리하여 다양한 클라우드나 OS 환경에서의 배포를 용이하게 한다.
+
+### Container Image
+
+쿠버네티스에서 컨테이너 이미지는 애플리케이션과 그에 필요한 모든 소프트웨어 종속성을 포함하는 이진 데이터를 나타낸다. 컨테이너 이미지는 독립적으로 실행 가능한 소프트웨어 번들로, 런타임 환경에 대해 명확한 가정을 한다.  
+일반적으로 사용자는 애플리케이션의 컨테이너 이미지를 생성하고, 이를 레지스트리에 푸시한 후, Pod에서 참조한다.
+
+- 컨테이너 이미지는 실행 준비가 된 소프트웨어 패키지로, 애플리케이션 코드, 런타임, 라이브러리, 설정 등을 포함한다. 
+- 컨테이너는 상태가 없고 변경 불가능하게 설계되어야 한다. 
+- 실행 중인 컨테이너의 코드를 변경하는 것은 권장하지 않는다.
+
+**이미지 이름**
+
+컨테이너 이미지는 일반적으로 `pause`, `example/mycontainer`, `kube-apiserver`와 같은 이름을 가진다. 레지스트리 호스트명도 포함될 수 있다. 예를 들어, `fictional.registry.example/imagename`과 같이 될 수 있다.
+
+**이미지 업데이트**
+
+처음 Deployment, StatefulSet, Pod 등을 생성할 때, 기본적으로 모든 컨테이너의 pull 정책이 `IfNotPresent`로 설정된다. 이 정책은 이미지가 로컬에 존재하는 경우 이미지를 pull하지 않는다.
+
+**이미지 pull 정책**
+
+- `imagePullPolicy`는 컨테이너의 속성 중 하나로, 이미지를 언제 pull 할지를 결정한다.
+- `IfNotPresent`, `Always`, `Never` 등의 값을 가질 수 있다.
+
+**다중 아키텍처 이미지**
+
+컨테이너 레지스트리는 아키텍처별 버전의 컨테이너를 가리키는 이미지 인덱스를 제공할 수 있다. 이를 통해 다양한 시스템이 사용하는 머신 아키텍처에 적합한 바이너리 이미지를 가져올 수 있다.
+
+**프라이빗 레지스트리 사용**
+
+프라이빗 레지스트리는 이미지를 읽기 위해 키가 필요할 수 있다. 이러한 인증 정보는 여러 방법으로 제공될 수 있다.
+
+**이미지 Pull 실패 시**
+
+`ImagePullBackOff` 상태는 쿠버네티스가 컨테이너 이미지를 pull할 수 없어 컨테이너를 시작할 수 없는 상태를 나타낸다.
+
+### Container Environment
+
+- 파일시스템: 이미지와 하나 이상의 볼륨의 조합
+- 컨테이너 정보: 컨테이너 자체에 대한 정보
+  - 컨테이너의 호스트명은 해당 컨테이너가 실행 중인 Pod의 이름으로, hostname 명령어나 libc의 gethostname 함수 호출을 통해 확인할 수 있다.
+  - Pod 이름과 네임스페이스는 [downward API](https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/)를 통해 환경 변수로 사용할 수 있다.
+  - Pod 정의에서 사용자가 정의한 환경 변수도 컨테이너에서 사용 가능하다.
+- 클러스터의 다른 객체 정보: 클러스터 내의 다른 객체에 대한 정보
+  - 컨테이너가 생성될 때 실행 중이었던 모든 서비스의 목록이 환경 변수로 해당 컨테이너에 제공된다. 이 목록은 새 컨테이너의 Pod와 동일한 네임스페이스 내의 서비스와 쿠버네티스 제어 평면 서비스로 제한된다.
+  - 서비스는 전용 IP 주소를 가지며, DNS 애드온이 활성화된 경우 컨테이너에서 DNS를 통해 사용할 수 있다.
+
+### Container Runtime
+
+컨테이너 런타임은 쿠버네티스가 컨테이너를 효과적으로 실행하는 데 필요한 기본 구성 요소로, 컨테이너의 실행과 라이프사이클을 관리한다.  
+쿠버네티스는 containerd, CRI-O 등의 컨테이너 런타임을 지원한다.
+
+### RuntimeClass
+
+클러스터에서 여러 컨테이너 런타임을 사용해야 하는 경우, Pod에 대해 RuntimeClass를 지정하여 특정 컨테이너 런타임을 사용하도록 할 수 있다.
+
+런타임 클래스를 사용하면, 다른 Pod 간에 다른 런타임 클래스를 설정하여 성능과 보안 간의 균형을 제공할 수 있다. 예를 들어, 특정 작업이 높은 수준의 정보 보안을 필요로 하는 경우, 하드웨어 가상화를 사용하는 컨테이너 런타임에서 실행되도록 해당 Pod를 스케줄링할 수 있다.
+
+**설정(Setup)**
+
+- 노드에서 CRI 구현 구성: 런타임 핸들러 이름이 있는 구성이 필요하며, 이는 RuntimeClass에 의해 참조된다.
+- 해당 RuntimeClass 리소스 생성: 각 핸들러에 대해 해당하는 RuntimeClass 객체를 생성한다.
+
+**사용법(Usage)**
+
+런타임 클래스가 클러스터에 구성되면, Pod 스펙에 runtimeClassName을 지정하여 사용할 수 있다.
+
+**CRI 구성(CRI Configuration)**
+
+CRI 런타임은 노드에서 구성되며, containerd, CRI-O 등의 구성 방법이 있다.
+
+**스케줄링(Scheduling)**
+
+런타임 클래스의 scheduling 필드를 지정하여, 해당 RuntimeClass를 지원하는 노드에만 Pod가 스케줄링되도록 제약을 설정할 수 있다.
+
+**Pod Overhead**
+
+Pod Overhead을 통해 Pod를 실행하는 데 연관된 오버헤드 리소스를 지정할 수 있다. 오버헤드를 선언하면, 클러스터(스케줄러 포함)가 Pod 및 리소스에 대한 결정을 내릴 때 이를 고려할 수 있다.
+
+### Container Lifecycle Hooks
+
+쿠버네티스의 컨테이너 라이프사이클 훅은 컨테이너의 관리 라이프사이클 동안 발생하는 이벤트에 의해 트리거되는 코드를 실행하기 위한 프레임워크를 제공한다.
+
+**컨테이너 훅(Container Hooks)**
+
+- **PostStart**: 컨테이너가 생성된 직후에 실행된다. 그러나 ENTRYPOINT 전에 실행될 것이라는 보장은 없다.
+- **PreStop**: 컨테이너가 API 요청이나 관리 이벤트로 인해 종료되기 직전에 호출된다.
+
+**훅 핸들러 구현(Hook Handler Implementations)**
+
+컨테이너는 아래와 같은 훅을 구현하고 등록함으로써 훅에 액세스할 수 있다.
+
+- Exec: 컨테이너의 cgroups 및 네임스페이스 내에서 특정 명령(예: pre-stop.sh)을 실행한다.
+- HTTP: 컨테이너의 특정 엔드포인트에 대해 HTTP 요청을 실행한다.
+
+**훅 핸들러 실행(Hook Handler Execution)**
+
+- Hook Handler Execution: 컨테이너 라이프사이클 관리 훅이 호출되면, 쿠버네티스 관리 시스템은 훅 액션에 따라 핸들러를 실행한다. **httpGet**과 **tcpSocket**은 kubelet 프로세스에 의해 실행되며, exec는 컨테이너 내에서 실행된다.
+- Synchronous Calls: 훅 핸들러 호출은 컨테이너를 포함하는 Pod의 컨텍스트 내에서 동기적으로 이루어진다. 즉, **PostStart** 훅의 경우, 컨테이너의 ENTRYPOINT와 훅은 비동기적으로 실행된다. 그러나 훅이 너무 f오래 실행되거나 멈추면, 컨테이너는 실행 상태에 도달할 수 없다.
+- PreStop Hook: PreStop 훅은 컨테이너를 중지시키는 신호로부터 비동기적으로 실행되지 않는다. 훅이 실행을 완료해야 TERM 신호가 전송될 수 있다. **PreStop** 훅이 실행 중에 멈추면, Pod의 상태는 Terminating이 되고, `terminationGracePeriodSeconds`가 만료될 때까지 그 상태를 유지한다.
+- Failed Hooks: PostStart 또는 PreStop 훅 중 하나가 실패하면, 컨테이너는 종료된다.
+- Recommendation for Lightweight Handlers: 사용자는 훅 핸들러를 가능한 한 경량화해야 한다. 그러나 상태를 저장하는 등의 긴 실행 명령이 필요한 경우도 있다.
+
+**훅 전달 보장(Hook Delivery Guarantees)**
+
+- 훅은 최소한 한 번 이상 호출될 것이라는 의도로 설계되었다. 즉, PostStart나 PreStop과 같은 주어진 이벤트에 대해 훅이 여러 번 호출될 수 있다.
+- 일반적으로 단일 전달만 수행된다. 예를 들어, HTTP 훅 수신기가 다운되어 트래픽을 처리할 수 없는 경우, 재전송을 시도하지 않는다.
+- 그러나 드물게 두 번 전달될 수 있다. 예를 들어, kubelet이 훅을 전송하는 중간에 재시작하는 경우, kubelet이 다시 시작된 후 훅이 다시 전송될 수 있다.
+
+**훅 핸들러 디버깅(Debugging Hook Handlers)**
+
+- 훅 핸들러의 로그는 Pod 이벤트에 노출되지 않는다.
+- 핸들러가 어떤 이유로 실패하면 이벤트를 방송한다. **PostStart**의 경우 `FailedPostStartHook` 이벤트가, **PreStop**의 경우 `FailedPreStopHook` 이벤트가 발생한다.
+- 실패한 `FailedPostStartHook` 이벤트를 직접 생성하려면, 'lifecycle-events.yaml' 파일을 수정하여 **postStart** 명령을 "badcommand"로 변경하고 적용하면 된다.
+- `kubectl describe pod lifecycle-demo`를 실행하여 볼 수 있는 결과 이벤트의 예시 출력이 제공된다.
+
+라이프사이클 훅을 사용하면, 컨테이너의 생성과 종료 시점에 사용자 정의 로직을 실행할 수 있어, 상태 저장이나 초기화 작업 등을 수행하는 데 유용하다.
+
+---
