@@ -6,7 +6,7 @@ tags:
   - container
 categories:
   - kubernetes
-published: false
+published: true
 ---
 
 # Kubernetes란?
