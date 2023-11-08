@@ -107,3 +107,40 @@ published: false
 ### Pod Overhead
 
 쿠버네티스에서는 사이드카 컨테이너를 실행하는 데 관련된 오버헤드를 기반으로 파드 수준에서 파드의 오버헤드가 설정된다. 이 오버헤드는 컨테이너의 리소스 요청 및 제한에 추가하여 계산된다.
+
+## Disruptions
+
+중단에 대해서 이야기하기 전에 중단의 종류에 대해서 알아야한다. 자발적 중단(**Voluntary disruptions**)과 비자발적 중단(**Involuntary disruptions**) 두 가지의 종류의 중단이 존재한다.  
+예시를 통해서 더 알아보도록 하자.
+
+비자발적 중단 (**Involuntary disruptions**)
+- 노드를 백업하는 물리적 기계의 실패
+- 관리자가 실수로 VM 삭제
+- 클라우드 프로바이더나 하이퍼바이저 오류로 인해 VM 삭제
+- 커널 패닉
+- 클러스터 네트워크 파티션으로 인한 노드 삭제
+- 노드 자원 부족으로 인한 파드 추방
+
+자발적 중단 (**Voluntary disruptions**)
+- 파드 관리하는 워크로드나 컨트롤러 삭제
+- 파드 템플릿의 업데이트로 인한 재시작
+- 의도적인 파드 삭제
+- 업데이트나 디버깅을 위한 노드 드레인
+- 클러스터 오토스케일링
+
+이렇듯 자발적 중단이 자주 발생하면 고가용성 애플레케이션을 운영하는데에 지장이 생긴다. 이러한 상황에도 적어도 어느 정도의 서비스를 유지하고 싶다는 니즈를 충족시키기 위한 기능을 `PodDisruptionBudget` (PDB)라고 한다.  
+PDB는 자발적 중단으로 인해 동시에 다운되는 애플리케이션의 파드 수를 제한할 수 있다. 만약, 최소한의 파드 개수를 보장해야하는 경우 (쿼럼 기반, 클러스터 기반) PDB를 사용하면 최소한의 파드를 보장 받을 수 있다.  
+
+애플리케이션마다 PDB를 설정할 수 있으며, 자발적 중단 (node drain)과 같은 상황이 발생하였을 때 deployment의 `.spec.replicas`만큼 유지하다가 PDB의 `minAvailable`만큼만 제외하고 드레인이 진행된다.
+
+### Pod disruption conditions v1.26 [beta]
+
+- `PreemptionByScheduler`: 스케줄러에 의해 우선 순위가 더 높은 새로운 파드를 수용하기 위해 선점 될 예정
+- `DeletionByTaintManager`: 파드가 Taint Manager에 의해 삭제될 예정
+- `EvictionByEvictionAPI`: 쿠버네티스 Eviction API에 evict 예정
+- `DeletionByPodGC`: 더 이상 존재하지 않은 노드에 바인딩 된 파드가 가비지 컬렉터에 의해 삭제될 예정
+- `TerminationByKubelet`: 파드는 evict 혹은 노드의 graceful shutdown으로 kubelet에 의해 종료됨
+
+Job이나 CronJob에서도 사용할 수 있으며, 파드 실패 정책으로 이용 될 수 있다.
+
+---
