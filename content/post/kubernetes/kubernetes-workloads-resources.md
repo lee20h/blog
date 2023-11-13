@@ -144,4 +144,83 @@ spec:
 위와 같은 특징으로 인해서 순서가 중요한 데이터베이스나 클러스터 시스템, 데이터 복제나 샤딩이 필요한 시스템, 안정적인 넨트워크나 지속적인 스토리지가 필요한 애플리케이션 등으로 쓰일 수 있다.  
 이러한 예시에서는 레플리카 수나 볼륨 클레임, 파드 템플릿을 고려해서 작성해야한다는 유의 사항이 존재한다.
 
----
+## DaemonSet
+
+파드를 정의하는 다른 컨트롤러와 다르게 `DaemonSet`은 각 노드마다 파드를 정의하는 컨트롤러이다. 클러스터 운영에 필수적인 네트워킹 도구와 같이 모든 노드에서 적용될 법한 도구들을 위해서 사용한다.  
+따라서 원하는 노드들에서 파드의 복사본을 실행하도록 보장하며, 노드가 클러스터에 추가되면 해당 노드에 파드가 추가되고 노드 제거 시 파드도 제거된다.  
+
+클러스터 스토리지나 로그 수집, 노드 모니터링과 같이 모든 노드에서 파드가 존재해야하는 경우 사용하게 된다. 이 때 원하는 노드를 고르는 방법은 `.spec.template.spec.nodeSelector`을 이용하여 원하는 노드를 택하게 되고, 위에서 이야기한 대로 정의된 바로 따라서 각 노드마다 파드를 생성한다.  
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+```
+
+위와 같이 정의하면 `DaemonSet`을 사용할 수 있다. 이 때, 노드 레이블이 변경되면 일치하는 노드에 파드를 추가하고 더 이상 일치하지 않으면 파들르 제거한다. 또, `--cascade=orphan` 옵션을 사용하면 파드는 노드에 남게 된다.  
+
+## Job
+
+`Job`은 쿠버네티스에서 한번 실행하고 완료되는 작업을 관리하는 컨트롤러다. `Job`에서는 파드를 관리하며 파드가 성공적으로 완료되면 잡도 완료된다.  
+데이터 처리 및 분석과 같은 배치성 작업과 스케줄링된 작업, 병렬 작업 같은 경우 `Job`으로 사용하는 예시가 될 수 있다.  
+
+단순히 한번만 실행하는 오브젝트로 다음과 같은 특징을 가지고 있다.
+
+- 하나 이상의 파드를 생성하고, 지정된 수의 파드가 완료될 때까지 재시도한다.
+- 파드가 실패한 경우, 새로운 파드를 시작할 수 있다.
+- `CronJob`을 이용하여 정기적인 작업을 실행할 수 있다.
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4
+```
+
+## CronJob
+
+`CronJob`은 `Job`을 한번 더 추상화한 오브젝트로, 반복적인 일정에 일회성 작업을 한다. 주로 백업, 보고서 생성 등과 같은 작업에 사용된다. 또한, `CronJob`의 스케줄링은 유닉스의 Crontap 파일의 스케줄과 동일하다.  
+또한, 단일 크론잡이 여러 개의 동시 작업을 생성할 수 있으며, `Job`과 동일하게 하나 이상의 파드를 생성하고, 지정된 수의 파드가 성공적으로 완료 될 때까지 재시도한다.
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox:1.28
+            command: ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
+          restartPolicy: OnFailure
+```
