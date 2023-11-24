@@ -105,6 +105,77 @@ endpoints:
 
 ## Ingress
 
-클러스터 외부에서 클러스터 내의 서비스로 HTTP 및 HTTPS 경로를 노출한다. 트래픽 라우팅은 정의된 규칙에 의해서 제어된다. 여기에서 인그레스 혼자서 사용되는 것은 불가능하고, 무조건 인그레스 컨트롤러가 필요하다. 인그레스 컨트롤러에는 Nginx나 Treafik과 같은 여러 구현체가 존재한다.
+클러스터 외부에서 클러스터 내의 서비스로 HTTP 및 HTTPS 경로를 노출한다. 트래픽 라우팅은 정의된 규칙에 의해서 제어된다. 여기에서 인그레스 혼자서 사용되는 것은 불가능하고, 무조건 인그레스 컨트롤러가 필요하다. 인그레스 컨트롤러에는 Nginx나 Treafik과 같은 여러 구현체가 존재한다.  
+인그레스 컨트롤러마다 다르지만 정한 규칙에 의해서 트래픽을 컨트롤하는 부분은 동일하다.
 
 ![image](https://github.com/lee20h/blog/assets/59367782/e1a5a699-88a9-41f5-b05e-73816201f685)
+
+그림과 같이 외부로부터의 트래픽을 파드에 전달하는 매개체 역할을 하며, 규칙에 의거하여 서비스에 전달하는 역할을 한다.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
+```
+
+단일 서비스나, 여러 서비스에 같은 IP를 통해 접근하도록 규칙을 만들 수도 있고, DNS나 가상 호스트 기반으로 규칙을 정할 수 있다. 보안 연결을 위한 TLS를 구현하기 위한 비밀키와 인증서를 Secret에 담아서 사용할 수도 있다.
+
+### Ingress Rule
+
+HTTP 및 HTTPS 트래픽을 쿠버네티스 서비스로 어떻게 라우팅되는지 정의하는 부분으로, 하나의 인그레스가 여러의 서비스로 보내거나 부하 분산, TLS 종료, 이름 기반 가상 호스팅 등 여러 기능들을 구성할 수 있다.  
+이때 실제 라우팅은 인그레스 컨트롤러에서 처리하게 된다. 이 인그레스 컨트롤러에서 클라우드 부하 분산기나 리버스 프록시 같은 여러 라우팅 매커니즘이 될 수 있다.  
+
+### Ingress Class
+
+인그레스 클래스는 동일한 쿠버네티스 클러스터 내에서 다양한 인그레스 컨트롤러를 구현할 수 있게 해주는 기능이다. 이 기능은 다양한 목적을 위한 다른 유형의 인그레스 컨트롤러가 필요할 때 쓰인다.  
+즉, 인그레스를 생성할 때 클래스를 통해 여러 컨트롤러 중 원하는 컨트롤러를 정해서 사용할 수 있게 한다. 주석과 매개변수를 통해 클래스의 동작을 커스텀하게 정의하여 사용할 수 있다.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: external-lb
+spec:
+  controller: example.com/ingress-controller
+  parameters:
+    apiGroup: k8s.example.com
+    kind: IngressParameters
+    name: external-lb
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: external-lb
+  rules:
+    - http:
+        paths:
+          - path: /testpath
+            pathType: Prefix
+            backend:
+              service:
+                name: test
+                port:
+                  number: 80
+```
+
+## Ingress Controller
+
