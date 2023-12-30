@@ -6,7 +6,7 @@ tags:
   - container
 categories:
   - kubernetes
-published: false
+published: true
 ---
 
 # Workload Resources
@@ -224,3 +224,14 @@ spec:
             command: ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
           restartPolicy: OnFailure
 ```
+
+## ReplicationController
+
+ReplicationController의 경우에는 ReplicaSet으로 대체하여 관리하며, Deployment와도 연결하여 사용하기 때문에 다루지 않았다.  
+간단하게 메모하자면, 두 가지의 차이점이 존재한다.  
+
+1. 셀렉터
+2. 롤링 업데이트 유무
+
+ReplicationController는 레이블이 같은지 다른지만 비교하는 반면, ReplicaSe은 집합 기반으로 in, notin, exist와 같은 연산자를 지원한다.  
+또한, ReplicationController는 Rolling-update를 지원하지만, ReplicaSet는 Deployment를 통해서 지원한다.

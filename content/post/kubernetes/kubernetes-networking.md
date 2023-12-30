@@ -201,5 +201,110 @@ spec:
 ![image](https://github.com/lee20h/blog/assets/59367782/f495ac71-1ae4-46a3-9e5f-2bf9bce7bfb6)
 
 게이트웨이는 게이트웨이 클래스 하나와 연결되고 하나 이상의 라우트 종류와 연결되어야 한다. 즉, 게이트웨이 클래스는 인그레스 컨트롤러와 같은 역할을 하며 들어온 트래픽을 원하는 라우트로 필터링해서 보내게 된다.  
-즉, 하나의 클래스를 사용하며 여러 게이트웨이들이 자신들이 라우팅을 필터링할 여러 라우트들을 가지고 트래픽을 보내는 방식으로 진행된다는 것이다.
+즉, 하나의 클래스를 사용하며 여러 게이트웨이들이 자신들이 라우팅을 필터링할 여러 라우트들을 가지고 트래픽을 보내는 방식으로 진행된다는 것이다. 트래픽의 흐름을 그려보면 아래 그림과 같이 이해할 수 있다.
+
+![image](https://github.com/lee20h/blog/assets/59367782/267338e0-3e70-4819-931f-be81a5afca89)
+
+여기에서 사용되는 리소스들을 예제로 작성해보자.
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: example-class
+spec:
+  controllerName: example.com/gateway-controller
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: example-gateway
+spec:
+  gatewayClassName: example-class
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: example-httproute
+spec:
+  parentRefs:
+    - name: example-gateway
+  hostnames:
+    - "www.example.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /login
+      backendRefs:
+        - name: example-svc
+          port: 8080
+```
+
+## Network Policies
+
+네트워크 정책은 쿠버네티스 클러스터 내에서 트래픽 흐름을 제어하는 데 사용되는 규칙으로 OSI 레이어 3(네트워크) 또는 레이어 4(전송)에서 IP 주소나 포트 수준으로 트래픽을 제어하고자 할 때 유용하다. 네트워크 정책은 파드 간 뿐 아니라 파드와 외부 세계 간의 통신을 제어하는 데 사용된다. 
+
+네트워크 정책을 이루는 구성 요소는 다음과 같이 3가지로 이뤄져있다.  
+
+- Policy Types
+  - Ingress: 들어오는 트래픽을 제어한다. 기본적으로 모든 인바운드 연결이 허용되지만, 특정 정책을 적용하여 제한할 수 있다.
+  - Egress: 나가는 트래픽을 제어한다. 기본적으로 모든 아웃바운드 연결이 허용되지만, 특정 정책을 적용하여 제한할 수 있다. 
+- Selectors
+  - Pod Selector: 특정 파드 또는 파드 그룹을 대상으로 정책을 적용한다. 레이블 셀렉터를 사용하여 특정 파드를 선택할 수 있다.
+  - Namespace Selector: 특정 네임스페이스의 모든 파드를 대상으로 정책을 적용한다. 이를 통해 네임스페이스 간의 통신을 제어할 수 있다. 
+- Allow Rules
+  - From/To: 특정 출처(ingress) 또는 목적지(egress)를 지정하여 특정 트래픽을 허용한다.
+    - 다른 파드(파드 셀렉터를 사용하여 지정)
+    - 다른 네임스페이스(네임스페이스 셀렉터를 사용하여 지정)
+    - IP 블록(CIDR 표기법을 사용하여 특정 IP 범위 지정)
+  - Ports: 특정 포트 또는 포트 범위에 대한 트래픽을 허용한다. 프로토콜(TCP, UDP, SCTP)과 함께 지정될 수 있다.
+
+### 네트워크 정책의 작동 방식
+
+- 기본적으로, 네트워크 정책이 없는 경우 모든 트래픽이 허용된다. '기본 거부(default deny)' 정책을 만들어 특정 트래픽만 허용하도록 설정할 수 있다.
+- 여러 네트워크 정책이 독립적으로 평가되어 하나의 파드에 적용될 수 있다. 이 경우, 허용된 트래픽은 모든 관련 정책에 의해 허용된 트래픽의 합집합으로 적용된다.
+
+### 예시
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+      - ipBlock:
+          cidr: 172.17.0.0/16
+          except:
+            - 172.17.1.0/24
+      - namespaceSelector:
+          matchLabels:
+            project: myproject
+      - podSelector:
+          matchLabels:
+            role: frontend
+      ports:
+        - protocol: TCP
+          port: 6379
+  egress:
+    - to:
+      - ipBlock:
+          cidr: 10.0.0.0/24
+      ports:
+        - protocol: TCP
+          port: 5978
+```
 
