@@ -6,14 +6,10 @@ aliases = ["about-me", "about-hun", "contact"]
 author = "hun"
 +++
 
-## Hi there 👋
-
-I'm a DevOps Engineer working in Korea
-
-### I'm Interested in
-- DevOps Culture
-- CI/CD
-- Container
+### Interest
 - Kubernetes
-- Opentelemetry
-- Public Cloud System
+- Observability
+
+
+[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/younghun-lee-745b12201/)](https://www.linkedin.com/in/younghun-lee-745b12201/)
+[![Gmail Badge](https://img.shields.io/badge/-Gmail-d14836?style=flat-square&logo=Gmail&logoColor=white&link=mailto:lee0h.0417@gmail.com)](mailto:lee0h.0417@gmail.com)
