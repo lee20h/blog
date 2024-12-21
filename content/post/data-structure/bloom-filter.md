@@ -63,11 +63,26 @@ Bloom Filter는 긍정 오류(false positive)을 허용하지만, 부정 오류(
 - 긍정 오류의 확률을 결정하는 요소
   - 필터에 추가된 요소 수가 많을수록
   - 비트 배열의 크기 `m`이 충분하지 않을 때
-  - 해시 함수 또는 `k`의 선택이 좋지 않을 때
+  - 해시 함수 또는 밑에서 후술할 해시 함수의 개수가 적당하지 않을 때
+
+### 긍정 오류 확률 계산
+
+비트 배열의 모든 비트는 처음에 0으로 설정되어 있어요. 요소 `n`개를 추가한 후, 각 비트가 1로 설정될 확률을 계산해보면 다음과 같아요.
+
+[1]<figure style="display: inline-block;"><img src="https://github.com/user-attachments/assets/29d8143a-3f4e-4ae8-bd1e-3e00423bdaa8" align="left"/></figure>
+
+[2]<figure style="display: inline-block;"><img src="https://github.com/user-attachments/assets/43ff2d21-413b-4407-a828-c4ca84c5fb64" align="left"/></figure>
+
+[3]<figure style="display: inline-block;"><img src="https://github.com/user-attachments/assets/b1690714-28c6-49c9-a8e6-11fda7721128" align="left"/></figure>
+
+각 요소가 비트를 1로 설정할 확률은 `1/m`으로, n개의 요소가 추가 된 후 특정 비트가 0인 확률은 [1]와 같아요.  
+특정 요소가 Bloom Filter에 없지만 모든 해시 함수가 1로 설정된 비트를 가르킬 확률은 [2]와 같아요. 이를 정리하면 [3]이 나오게 되어요.
 
 ## 4. 해시 함수
 - `k`개의 독립적인 해시 함수가 이상적이지만 계산 비용이 높음
-  - k = (m / n) * ln(2) (m: 비트 배열의 크기, n: 삽입할 요소 수)
+  - <figure style="display: inline-block;"><img src="https://github.com/user-attachments/assets/6e008215-9cd7-49bb-87f2-fa289500d6ba" align="left"/></figure> [3] 기반으로 k를 구하는 방법 (m: 비트 배열의 크기, n: 삽입할 요소 수)  
+  - <figure style="display: inline-block;"><img src="https://github.com/user-attachments/assets/527f7fbb-ebb6-420f-ac3e-47032be27963" align="left"/></figure> 위의 공식에서 p를 일반적인 1/2로 설정하면 사진과 같은 공식이 완성됨 
+  - `k`가 너무 적으면 긍정 오류율 증가, 너무 많으면 비트 배열의 사용 효율 떨어짐
   - 해시가 균일 분포될 수록 거짓긍정률이 낮아짐
 - 일반적인 최적화 방법
   - 단일 해시 함수를 사용하고 향상된 더블 해싱 또는 트리플 해싱과 같은 기술로 `k`개의 인덱스 유도
@@ -83,3 +98,7 @@ Bloom Filter는 긍정 오류(false positive)을 허용하지만, 부정 오류(
 위에서 학습한 내용 기반으로 가벼운 Bloom Filter를 Golang으로 구현해봤어요.
 - [repository](https://github.com/lee20h/bloomfilter-practice)
 
+
+## 참고
+
+- Yifeng Zhu and Hong Jiang, False Rate Analysis of Bloom Filter Replicas in Distributed Systems, In Proceeding of the 2006 International Conference on Parallel Processing (ICPP'06)
