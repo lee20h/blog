@@ -1,4 +1,3 @@
-
 title = "Journey"
 author = "Hun"
 description = "기록장"
@@ -7,7 +6,7 @@ profilePicture = "images/profile.jpg"
 keywords = "devops"
 favicon = "favicons/"
 # example ["css/custom.css"]
-customCss = []
+customCss = ["/css/styles.css"]
 # example ["js/custom.js"]
 customJs = [] 
 mainSections = ["post"]

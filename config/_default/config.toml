@@ -19,7 +19,7 @@ enableRobotsTXT = true
 googleAnalytics = "G-3YKR0LLEP9"
 
 # Syntax highlighting
-pygmentsUseClasses = true   
+pygmentsUseClasses = false
 pygmentsCodeFences = true
 pygmentsCodefencesGuessSyntax = true
 
@@ -27,6 +27,8 @@ pygmentsCodefencesGuessSyntax = true
 localizedDates = false
 
 [markup]
+    [markup.highlight]
+        style = "dracula"
     [markup.goldmark]
         [markup.goldmark.renderer]
         unsafe=true

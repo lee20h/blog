@@ -1,0 +1,28 @@
+/* Code block styling */
+.content pre,
+.content .highlight,
+.post-content pre,
+.post-content .highlight,
+article pre,
+article .highlight {
+    margin: 0 !important;
+    padding: 1em !important;
+}
+
+/* Target direct code blocks */
+pre > code,
+.highlight > pre {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Inline code styling */
+p code {
+    padding: 0.2em 0.4em;
+}
+
+/* Override any theme defaults */
+.highlight-wrapper,
+.highlight-container {
+    margin: 0 !important;
+} 

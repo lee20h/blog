@@ -7,7 +7,7 @@ categories:
   - loki
 series:
   - loki
-published: false
+published: true
 ---
 
 ## Zone Awareness란?
@@ -22,14 +22,14 @@ Zone Awareness는 Loki가 여러 가용 영역(Availability Zones)에 걸쳐 데
 
 ## Zone Awareness 활성화 방법
 
-Zone Awareness를 활성화하려면 Loki 설정 파일에서 다음 설정을 추가해야 합니다:
+Zone Awareness를 활성화하려면 Loki 설정 파일에서 다음 설정을 추가해야 합니다.
 
 ```yaml
 ingester_client:
   zone_awareness_enabled: true
 ```
 
-또한 각 인스턴스(인제스터)에는 자신의 가용 영역 정보가 설정되어 있어야 합니다. 이는 일반적으로 환경 변수나 Kubernetes 라벨을 통해 제공됩니다:
+또한 각 인스턴스(인제스터)에는 자신의 가용 영역 정보가 설정되어 있어야 합니다. 이는 일반적으로 환경 변수나 Kubernetes 라벨을 통해 제공됩니다.
 
 ```yaml
 podLabels:
@@ -48,7 +48,7 @@ Distributor가 로그 데이터를 인제스터로 보낼 때, Zone Awareness가
 
 ### 3. 장애 처리 메커니즘
 
-Zone Awareness가 활성화된 상태에서 Loki는 영역 장애를 특별하게 처리합니다:
+Zone Awareness가 활성화된 상태에서 Loki는 영역 장애를 특별하게 처리합니다.
 
 ```go
 numReplicatedZones := min(len(r.ringZones), r.cfg.ReplicationFactor)
@@ -72,7 +72,7 @@ numReplicatedZones := min(len(r.ringZones), r.cfg.ReplicationFactor)
 
 ## 최적의 구성 방법
 
-이 문제를 방지하려면 다음과 같은 방법을 고려해볼 수 있습니다:
+이 문제를 방지하려면 다음과 같은 방법을 고려해볼 수 있습니다.
 
 1. **3개 이상의 영역 사용**: 복제 요소가 3인 경우, 최소 3개의 영역을 사용하는 것이 좋습니다. 이렇게 하면 한 영역이 완전히 실패해도 나머지 두 영역에서 서비스를 계속할 수 있습니다.
 
