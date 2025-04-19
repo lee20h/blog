@@ -67,3 +67,6 @@ localizedDates = false
   changefreq = "always"
   priority = 1.0
   filename = "sitemap.xml"
+
+[params]
+customSCSS = ["scss/custom.scss"]

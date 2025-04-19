@@ -1,0 +1,76 @@
+/* Force override table styles */
+.content table,
+.post-content table,
+.post__content table {
+  width: 100% !important;
+  margin: 1.5em 0 !important;
+  border-collapse: collapse !important;
+  background-color: #292a2d !important;
+  color: #fff !important;
+}
+
+.content th,
+.post-content th,
+.post__content th,
+.content td,
+.post-content td,
+.post__content td {
+  padding: 0.75em !important;
+  border: 1px solid #3a3a3a !important;
+}
+
+.content th,
+.post-content th,
+.post__content th {
+  background-color: #3a3a3a !important;
+  color: #fff !important;
+  font-weight: bold !important;
+}
+
+.content tr:nth-child(even),
+.post-content tr:nth-child(even),
+.post__content tr:nth-child(even) {
+  background-color: #333 !important;
+}
+
+.content tr:hover,
+.post-content tr:hover,
+.post__content tr:hover {
+  background-color: #3a3a3a !important;
+}
+
+/* Light theme overrides */
+body:not(.dark-theme) .content table,
+body:not(.dark-theme) .post-content table,
+body:not(.dark-theme) .post__content table {
+  background-color: #fff !important;
+  color: #222 !important;
+}
+
+body:not(.dark-theme) .content th,
+body:not(.dark-theme) .post-content th,
+body:not(.dark-theme) .post__content th,
+body:not(.dark-theme) .content td,
+body:not(.dark-theme) .post-content td,
+body:not(.dark-theme) .post__content td {
+  border: 1px solid #ddd !important;
+}
+
+body:not(.dark-theme) .content th,
+body:not(.dark-theme) .post-content th,
+body:not(.dark-theme) .post__content th {
+  background-color: #f5f5f5 !important;
+  color: #333 !important;
+}
+
+body:not(.dark-theme) .content tr:nth-child(even),
+body:not(.dark-theme) .post-content tr:nth-child(even),
+body:not(.dark-theme) .post__content tr:nth-child(even) {
+  background-color: #f9f9f9 !important;
+}
+
+body:not(.dark-theme) .content tr:hover,
+body:not(.dark-theme) .post-content tr:hover,
+body:not(.dark-theme) .post__content tr:hover {
+  background-color: #f0f0f0 !important;
+} 

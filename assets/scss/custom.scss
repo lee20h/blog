@@ -1,0 +1,71 @@
+// Custom styles to override theme defaults
+
+// Table styles
+.content, .post-content {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid;
+    }
+  }
+}
+
+// Dark theme specific styles
+.dark-theme {
+  .content, .post-content {
+    table {
+      background: #2d2d2d;
+      
+      th, td {
+        border-color: #3a3a3a;
+      }
+      
+      th {
+        background: #3a3a3a;
+        color: #fff;
+      }
+      
+      tr {
+        &:nth-child(even) {
+          background: #333;
+        }
+        
+        &:hover {
+          background: #3a3a3a;
+        }
+      }
+    }
+  }
+}
+
+// Light theme specific styles
+body:not(.dark-theme) {
+  .content, .post-content {
+    table {
+      background: #fff;
+      
+      th, td {
+        border-color: #ddd;
+      }
+      
+      th {
+        background: #f5f5f5;
+        color: #333;
+      }
+      
+      tr {
+        &:nth-child(even) {
+          background: #fafafa;
+        }
+        
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+    }
+  }
+} 

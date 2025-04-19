@@ -25,4 +25,70 @@ p code {
 .highlight-wrapper,
 .highlight-container {
     margin: 0 !important;
+}
+
+/* Table styling for dark mode */
+.dark-theme .content table,
+.dark-theme .post-content table {
+    background-color: #2d2d2d !important;
+    border-collapse: collapse;
+    margin: 1em 0;
+    width: 100%;
+}
+
+.dark-theme .content table th,
+.dark-theme .content table td,
+.dark-theme .post-content table th,
+.dark-theme .post-content table td {
+    border: 1px solid #3a3a3a !important;
+    padding: 0.5em 1em;
+}
+
+.dark-theme .content table th,
+.dark-theme .post-content table th {
+    background-color: #3a3a3a !important;
+    color: #fff !important;
+}
+
+.dark-theme .content table tr:nth-child(even),
+.dark-theme .post-content table tr:nth-child(even) {
+    background-color: #333333 !important;
+}
+
+.dark-theme .content table tr:hover,
+.dark-theme .post-content table tr:hover {
+    background-color: #3a3a3a !important;
+}
+
+/* Table styling for light mode */
+.content table,
+.post-content table {
+    background-color: #ffffff !important;
+    border-collapse: collapse;
+    margin: 1em 0;
+    width: 100%;
+}
+
+.content table th,
+.content table td,
+.post-content table th,
+.post-content table td {
+    border: 1px solid #e0e0e0 !important;
+    padding: 0.5em 1em;
+}
+
+.content table th,
+.post-content table th {
+    background-color: #f5f5f5 !important;
+    color: #333333 !important;
+}
+
+.content table tr:nth-child(even),
+.post-content table tr:nth-child(even) {
+    background-color: #fafafa !important;
+}
+
+.content table tr:hover,
+.post-content table tr:hover {
+    background-color: #f0f0f0 !important;
 } 
