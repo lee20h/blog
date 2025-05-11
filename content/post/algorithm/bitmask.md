@@ -5,7 +5,7 @@ tags:
   - bitmask
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 

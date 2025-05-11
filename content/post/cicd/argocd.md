@@ -7,7 +7,7 @@ categories:
   - cd
 series:
   - cicd
-published: true
+publishResources: true
 ---
 
 ## Argo 란?

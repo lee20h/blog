@@ -7,7 +7,7 @@ tags:
   - pattern
 categories:
   - kubernetes
-published: true
+publishResources: true
 ---
 
 # Operator(오퍼레이터) 패턴에 대하여

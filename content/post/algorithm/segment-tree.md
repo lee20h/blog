@@ -5,7 +5,7 @@ tags:
   - segment tree
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 

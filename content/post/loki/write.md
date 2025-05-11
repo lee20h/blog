@@ -7,7 +7,7 @@ categories:
   - loki
 series:
   - loki
-published: true
+publishResources: true
 ---
 
 Loki v3 기준으로 작성한 로그 수집하는 구조를 정리했습니다. 여기서는 수집기를 제외하고 Loki에서 로그를 수집하는데 쓰이는 컴포넌트들과 아키텍처에 대해서 공부한 바를 정리하고 있습니다.

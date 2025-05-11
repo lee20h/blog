@@ -5,7 +5,7 @@ tags:
   - palindrome
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # 회문

@@ -6,7 +6,7 @@ tags:
   - WWW
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # HTTP and WWW

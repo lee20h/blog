@@ -5,7 +5,7 @@ tags:
   - linux directory
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # 디렉토리와 파일

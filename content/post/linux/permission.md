@@ -5,7 +5,7 @@ tags:
   - linux permission
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # 관리 권한 및 접근 권한

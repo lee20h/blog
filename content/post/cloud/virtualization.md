@@ -8,7 +8,7 @@ categories:
   - cloud
 series:
   - cloud
-published: true
+publishResources: true
 ---
 
 # 가상화

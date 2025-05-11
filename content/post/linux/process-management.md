@@ -6,7 +6,7 @@ tags:
   - process
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # Process Management

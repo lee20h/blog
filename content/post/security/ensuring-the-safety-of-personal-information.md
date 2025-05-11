@@ -6,7 +6,7 @@ tags:
   - information
 categories:
   - security
-published: false
+publishResources: false
 ---
 
 # 개인정보 안정성 확보조치 기준 법령

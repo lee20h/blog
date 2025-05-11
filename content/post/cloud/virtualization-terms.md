@@ -8,7 +8,7 @@ categories:
   - cloud
 series:
   - cloud
-published: true
+publishResources: true
 ---
 
 ## On-premise / Off-premise

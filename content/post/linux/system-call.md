@@ -5,7 +5,7 @@ tags:
   - system call
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # System Call

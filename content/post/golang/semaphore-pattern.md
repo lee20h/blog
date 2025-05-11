@@ -8,7 +8,7 @@ categories:
   - golang
 series:
   - Concurrency
-published: true
+publishResources: true
 ---
 
 # Go Semaphore Pattern이란?

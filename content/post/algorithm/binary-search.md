@@ -5,7 +5,7 @@ tags:
   - binary search
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 

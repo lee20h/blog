@@ -6,7 +6,7 @@ tags:
   - quality of service
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Congestion Control and Quality of Service

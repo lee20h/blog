@@ -5,7 +5,7 @@ tags:
   - 자연수 분할
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # 수분할

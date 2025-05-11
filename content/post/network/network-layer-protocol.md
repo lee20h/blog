@@ -8,7 +8,7 @@ tags:
   - ICMP
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Network Layer Protocols: ARP, IPv4, ICMPv4, IPv6 and ICMPv6  

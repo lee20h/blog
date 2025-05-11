@@ -7,7 +7,7 @@ tags:
   - network
 categories:
   - kubernetes
-published: false
+publishResources: false
 ---
 
 # Kubernetes Network

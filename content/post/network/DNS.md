@@ -5,7 +5,7 @@ tags:
   - DNS
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Domain Name System

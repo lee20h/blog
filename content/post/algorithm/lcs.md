@@ -5,7 +5,7 @@ tags:
   - LCS
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # LCS

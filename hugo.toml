@@ -2,3 +2,21 @@ theme = 'anatole'
 baseURL = 'https://20h.dev'
 languageCode = 'ko-kr'
 title = '여정기'
+
+[params]
+  # Disqus 비활성화
+  disqus = false
+  # Google Analytics 비활성화
+  googleAnalytics = false
+
+[markup]
+  [markup.highlight]
+    style = 'monokai'
+    lineNos = true
+    lineNumbersInTable = false
+    noClasses = false
+    codeFences = true
+    guessSyntax = false
+
+[build]
+  writeStats = true

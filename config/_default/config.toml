@@ -70,3 +70,7 @@ localizedDates = false
 
 [params]
 customSCSS = ["scss/custom.scss"]
+
+[services]
+  [services.disqus]
+    shortname = ""

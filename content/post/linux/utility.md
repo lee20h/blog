@@ -5,7 +5,7 @@ tags:
   - linux utility
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # 유틸리티

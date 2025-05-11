@@ -5,7 +5,7 @@ tags:
   - trie
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # 트라이

@@ -5,7 +5,7 @@ tags:
   - CPU
 categories:
   - operation system
-published: true
+publishResources: true
 ---
 
 

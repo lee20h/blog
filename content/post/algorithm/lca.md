@@ -5,7 +5,7 @@ tags:
   - LCA
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # LCA

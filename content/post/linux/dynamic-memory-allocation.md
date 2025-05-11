@@ -6,7 +6,7 @@ tags:
   - dynamic allocation
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # Dynamic Memory Allocation

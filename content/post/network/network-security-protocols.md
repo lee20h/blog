@@ -5,7 +5,7 @@ tags:
   - security
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Network Security Protocols

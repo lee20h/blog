@@ -6,7 +6,7 @@ tags:
   - parallel programming
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # Thread

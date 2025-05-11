@@ -5,7 +5,7 @@ tags:
   - 이항계수
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # 이항 계수

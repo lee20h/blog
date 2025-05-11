@@ -9,7 +9,7 @@ categories:
   - golang
 series:
   - Concurrency
-published: true
+publishResources: true
 ---
 
 # Goroutine 이란?

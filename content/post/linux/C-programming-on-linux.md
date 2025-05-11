@@ -6,7 +6,7 @@ tags:
   - c
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # C Programming on Linux

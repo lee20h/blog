@@ -5,7 +5,7 @@ tags:
   - CCW
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # CCW

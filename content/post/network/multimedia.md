@@ -6,7 +6,7 @@ tags:
   - multimedia
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Multimedia

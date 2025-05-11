@@ -5,7 +5,7 @@ tags:
   - network layer
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Network Layer

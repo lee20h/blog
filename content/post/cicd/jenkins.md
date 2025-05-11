@@ -7,7 +7,7 @@ categories:
   - ci
 series:
   - cicd
-published: true
+publishResources: true
 ---
 
 

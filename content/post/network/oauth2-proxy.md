@@ -6,7 +6,7 @@ tags:
   - kubernetes
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Oauth2 Proxy란?

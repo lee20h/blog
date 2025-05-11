@@ -7,7 +7,7 @@ tags:
   - review
 categories:
   - review
-published: true
+publishResources: true
 ---
 
 <figure>

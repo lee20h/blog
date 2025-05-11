@@ -7,7 +7,7 @@ tags:
 categories:
   - data-structure
   - bloom-filter
-published: true
+publishResources: true
 ---
 
 # Bloom Filter란?

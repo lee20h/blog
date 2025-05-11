@@ -7,5 +7,5 @@ categories:
   - category
 series:
   - series
-published: false
+publishResources: false
 ---

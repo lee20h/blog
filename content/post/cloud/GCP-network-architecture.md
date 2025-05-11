@@ -10,7 +10,7 @@ categories:
   - cloud
 series:
   - cloud
-published: true
+publishResources: true
 ---
 
 # Google Cloud Platform Network for Google Kubernetes Engine

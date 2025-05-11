@@ -5,7 +5,7 @@ tags:
   - devops
 categories:
   - article
-published: true
+publishResources: true
 ---
 
 The objective is to document findings and recommendations from the review of DevOps processes and artifacts.

@@ -8,7 +8,7 @@ categories:
   - devops
 series:
   - helm
-published: true
+publishResources: true
 ---
 
 ![image](https://github.com/lee20h/blog/assets/59367782/71942a7b-e70d-47a2-9ed9-1709ac1a2422)

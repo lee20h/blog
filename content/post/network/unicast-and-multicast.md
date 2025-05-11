@@ -6,7 +6,7 @@ tags:
   - multicast
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # Unicast and Multicast Routing

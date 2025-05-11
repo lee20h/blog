@@ -5,7 +5,7 @@ tags:
   - prefix sum
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 # 연속합
 [CSES](https://cses.fi/problemset/task/1643) [BOJ](https://www.acmicpc.net/problem/1912) [SWEA](https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AWXQm2SqdxkDFAUo&categoryId=AWXQm2SqdxkDFAUo&categoryType=CODE&&&)

@@ -9,7 +9,7 @@ categories:
   - cloud
 series:
   - cloud
-published: true
+publishResources: true
 ---
 
 IT 업계에 종사하는 사람들이라면 한번 쯤은 들어보거나 봤을 법한 고래 캐릭터와 Docker를 [공식페이지](https://www.docker.com/)에서 대문글로 이렇게 표현한다.

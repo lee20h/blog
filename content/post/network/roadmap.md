@@ -5,7 +5,7 @@ tags:
   - internet
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 ## 인터넷이란 무엇인가?  

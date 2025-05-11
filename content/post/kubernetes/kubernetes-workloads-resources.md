@@ -6,7 +6,7 @@ tags:
   - container
 categories:
   - kubernetes
-published: true
+publishResources: true
 ---
 
 # Workload Resources

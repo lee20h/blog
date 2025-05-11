@@ -7,7 +7,7 @@ categories:
   - loki
 series:
   - loki
-published: true
+publishResources: true
 ---
 
 ## Zone Awareness란?

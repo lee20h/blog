@@ -6,7 +6,7 @@ tags:
   - event-driven-architecture
 categories:
   - kafka
-published: true
+publishResources: true
 ---
 
 # 카프카란?

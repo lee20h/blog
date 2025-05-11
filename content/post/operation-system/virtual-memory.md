@@ -5,7 +5,7 @@ tags:
    - memory
 categories:
    - operation system
-published: true
+publishResources: true
 ---
 
 # Virtual Memory

@@ -5,7 +5,7 @@ tags:
   - rabin-karp
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # 라빈-카프(Rabin-Karp)

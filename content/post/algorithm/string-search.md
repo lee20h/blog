@@ -5,7 +5,7 @@ tags:
   - string
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 

@@ -6,7 +6,7 @@ tags:
   - FTP
 categories:
   - network
-published: true
+publishResources: true
 ---
 
 # SMTP and FTP

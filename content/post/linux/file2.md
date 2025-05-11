@@ -6,7 +6,7 @@ tags:
   - I/O
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # File: High-level I/O

@@ -5,7 +5,7 @@ tags:
   - KMP
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # KMP

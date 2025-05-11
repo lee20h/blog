@@ -5,7 +5,7 @@ tags:
   - graph
 categories:
   - algorithm
-published: true
+publishResources: true
 ---
 
 # Graph

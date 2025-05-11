@@ -6,7 +6,7 @@ tags:
   - linux redirection
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # Process and Redirection

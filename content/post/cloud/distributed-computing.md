@@ -8,7 +8,7 @@ categories:
   - cloud
 series:
   - cloud
-published: true
+publishResources: true
 ---
 
 # 분산 컴퓨팅이란?

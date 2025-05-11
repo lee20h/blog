@@ -8,7 +8,7 @@ tags:
   - socket
 categories:
   - linux
-published: true
+publishResources: true
 ---
 
 # IPC: Signal and Shared Memory
