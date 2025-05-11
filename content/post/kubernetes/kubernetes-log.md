@@ -6,7 +6,7 @@ tags:
   - log
 categories:
   - kubernetes
-publishResources: 
+publishResources: true
 ---
 
 쿠버네티스 환경에서 로그는 컨테이너 런타임에 의해 생성되고 kubelet에 의해 관리됩니다. 이 글에서는 쿠버네티스의 로그 생성부터 관리, 그리고 수집까지의 전체 과정을 살펴보겠습니다.
