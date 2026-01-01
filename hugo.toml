@@ -6,8 +6,6 @@ title = '여정기'
 [params]
   # Disqus 비활성화
   disqus = false
-  # Google Analytics 비활성화
-  googleAnalytics = false
 
 [markup]
   [markup.highlight]
@@ -20,3 +18,7 @@ title = '여정기'
 
 [build]
   writeStats = true
+
+[services]
+  [services.googleAnalytics]
+    ID = ""
