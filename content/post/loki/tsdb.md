@@ -5,7 +5,7 @@ tags:
   - loki
 categories:
   - loki
-published: true
+publishResources: true
 ---
 
 ## TSDB는 어떤 방식으로 문제를 해결했을까?
