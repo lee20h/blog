@@ -115,12 +115,13 @@ kubelet이 로그 로테이션 설정값을 컨테이너 런타임에 전달하�
 
 ```yaml
 kubelet:
-  containerLogMaxSize: "10Mi"      # 로그 파일의 최대 크기
-  containerLogMaxFiles: 5          # 보관할 로그 파일의 최대 개수
-  containerLogMaxAge: "7d"         # 로그 파일의 최대 보관 기간
+  containerLogMaxSize: "10Mi"      # 로그 파일의 최대 크기 (기본값: 10Mi)
+  containerLogMaxFiles: 5          # 보관할 로그 파일의 최대 개수 (기본값: 5)
 ```
 
 이 설정들은 Kubelet이 컨테이너 런타임에 전달하는 설정값입니다. Kubelet은 이 설정값들을 컨테이너 런타임의 로그 드라이버 설정으로 변환하여 전달합니다.
+
+> **참고**: Kubernetes kubelet은 `containerLogMaxSize`와 `containerLogMaxFiles` 두 가지 파라미터만 지원합니다. 로그 파일의 보관 기간은 컨테이너 런타임의 로그 로테이션 정책에 따라 결정되며, kubelet 레벨에서 직접 제어할 수 없습니다.
 ```text
 ┌──────────────────────────────────────────────────────────┐
 │                          Kubelet                         │
